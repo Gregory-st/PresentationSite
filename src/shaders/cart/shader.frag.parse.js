@@ -1,6 +1,7 @@
 export default /* glsl */`
 varying vec2 vUv;
 varying vec3 vPosition;
+uniform sampler2D uTexture;
 
 struct ColorStop{
 	vec3 color;
