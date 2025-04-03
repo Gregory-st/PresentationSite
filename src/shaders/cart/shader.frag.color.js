@@ -22,6 +22,32 @@ ColorRamp(colors, factor, finalColor);
 
 finalColor = mix(finalColor.rgb, texture.rgb, texture.a);
 
-diffuseColor = vec4(finalColor, 1);
+    vec3 ambient = vec3(0.0);
+    vec3 diffuse = vec3(0.0);
+    vec3 specular = vec3(0.0);
+    
+    // Базовый ambient-эффект (можно оставить общий для всех источников)
+    ambient = 0.1 * finalColor;
+    
+    vec3 norm = normalize(vNormal);
+    vec3 viewDir = normalize(viewPos - vPosition);
+    
+    // Суммируем вклад каждого источника
+    for (int i = 0; i < COUNT_LIGHTS; i++) {
+        vec3 lightDir = normalize(lightPos[i] - vPosition);
+        
+        // Диффузное освещение
+        float diff = max(dot(norm, lightDir), 0.0);
+        diffuse += diff * lightColor[i] * lightIntens[i];
+        
+        // Спекулярное освещение (модель Блинна-Фонга)
+        vec3 halfDir = normalize(lightDir + viewDir);
+        float spec = pow(max(dot(norm, halfDir), 0.0), shininess);
+        specular += spec * lightColor[i];
+    }
+    
+    vec3 result = (ambient + diffuse + specular) * finalColor;
+
+diffuseColor = vec4(result, 1);
 
 `;

@@ -1,9 +1,8 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
-import { RenderPass, ShaderPass, EffectComposer, EffectPass, BloomEffect } from 'postprocessing'
+import { RenderPass, EffectComposer, EffectPass, BloomEffect } from 'postprocessing'
 import * as CART from '../src/model/Cart.js';
-import { radians } from 'three/tsl';
+import * as CARTM from '../src/model/CartMatte.js';
 
 const scene = new THREE.Scene()
 const width = window.innerWidth
@@ -46,7 +45,7 @@ controll.maxDistance = 10;
 let ligths = [
     new THREE.SpotLight(0xe1bbfb, 300, 10, 90),
     new THREE.SpotLight('blue', 200, 15, 5),
-    new THREE.SpotLight('white', 200, 15, 5),
+    new THREE.SpotLight('white', 300, 15, 5),
     //new THREE.PointLight('white', 1)
 ];
 
@@ -65,39 +64,42 @@ ligths.forEach(ligth => {
 });
 
 const geometry = await CART.getGeometry('../models/scene.gltf');
+
 let materials1 = [
-    CART.getMaterial('../src/texture/company.png'),
-    CART.getMaterial('../src/texture/logo.png'),
-    CART.getMaterial('../src/texture/logo.png')
+    CART.getMaterial('../src/texture/company.png', ligths, 500.0, camera),
+    CART.getMaterial('../src/texture/logo.png',    ligths, 500.0, camera),
+    CART.getMaterial('../src/texture/logo.png',    ligths, 500.0, camera)
 ];
+const color = new THREE.Color(0x221358);
+const diffuseColor = new THREE.Color(0xfff);
 let materials2 = [
-    new THREE.MeshStandardMaterial({color: 0x221358}),
-    new THREE.MeshStandardMaterial({color: 0x221358}),
-    new THREE.MeshStandardMaterial({color: 0x221358})
+    CARTM.getMaterial(ligths, 1500.0, color, diffuseColor, camera),
+    CARTM.getMaterial(ligths, 1500.0, color, diffuseColor, camera),
+    CARTM.getMaterial(ligths, 1500.0, color, diffuseColor, camera)
 ];
 
-for(let i = 0; i < 3; i++) {
+for(let i = 0; i < materials1.length; i++) {
     let mesh = new THREE.Mesh(geometry, materials1[i]);
     mesh.rotation.x = getRadian(-15 + (10 * i));
     mesh.rotation.y = getRadian(25 - (10 * i));
     mesh.rotation.z = getRadian(-25 - (10 * i));
 
     mesh.position.x = 5 + i;    
-    mesh.position.y = 2 - i;
+    mesh.position.y = materials1.length - i - 2;
     mesh.position.z = 0;  
 
     scene.add(mesh);
 }
 
 
-for(let i = 0; i < 3; i++){
+for(let i = 0; i < materials2.length; i++){
     let mesh = new THREE.Mesh(geometry, materials2[i]);
     mesh.rotation.x = getRadian(15 - (10 * i));
     mesh.rotation.y = getRadian(-25 + (10 * i));
     mesh.rotation.z = getRadian(25 + (10 * i));
 
     mesh.position.x = -5 - i;    
-    mesh.position.y = 2 - i;
+    mesh.position.y = materials2.length - i - 2;
     mesh.position.z = 0;  
 
     scene.add(mesh);

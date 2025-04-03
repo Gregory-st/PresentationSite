@@ -34,13 +34,18 @@ export function getGeometry(urlModel) {
         });
 }
 
-export function getMaterial(urlTexture) {
+export function getMaterial(urlTexture, ligths, intensity, camera) {
     const loader = new TextureLoader();
     const texture = loader.load(urlTexture);
     return new MeshStandardMaterial({
         onBeforeCompile: (shader) => {
 
             shader.uniforms.uTexture = {value: texture };
+            shader.uniforms.viewPos = { value: camera.position };
+            shader.uniforms.lightPos = { value: ligths.map(ligth => ligth.position) };
+            shader.uniforms.lightColor = { value: ligths.map(ligth => ligth.color) };
+            shader.uniforms.lightIntens = {value: ligths.map(ligths => ligths.intensity / intensity) };
+            shader.uniforms.shininess = { value: 0.5 };
 
             let patternVert = /*glsl*/`#include <uv_pars_vertex>`;
             shader.vertexShader = shader.vertexShader.replace(
