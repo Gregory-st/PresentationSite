@@ -45,7 +45,7 @@ export function getMaterial(urlTexture, ligths, intensity, camera) {
             shader.uniforms.lightPos = { value: ligths.map(ligth => ligth.position) };
             shader.uniforms.lightColor = { value: ligths.map(ligth => ligth.color) };
             shader.uniforms.lightIntens = {value: ligths.map(ligths => ligths.intensity / intensity) };
-            shader.uniforms.shininess = { value: 0.5 };
+            shader.uniforms.shininess = { value: 3.0 };
 
             let patternVert = /*glsl*/`#include <uv_pars_vertex>`;
             shader.vertexShader = shader.vertexShader.replace(

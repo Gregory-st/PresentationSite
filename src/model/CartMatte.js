@@ -6,9 +6,11 @@ import vertColor from '../shaders/cart/matte/shader.color.vert';
 import fragParse from '../shaders/cart/matte/shader.parse.frag';
 import fragColor from '../shaders/cart/matte/shader.color.frag';
 
-export function getMaterial(lights, intensity, color, diffuseColor, camera){
+export function getMaterial(urlTexture, lights, intensity, color, diffuseColor, camera){
     return new MeshStandardMaterial({
         onBeforeCompile: (shader) => {
+
+            const loader = new TextureLoader();
 
             shader.uniforms.lightPositions = {value: lights.map(light => light.position)};
             shader.uniforms.lightColors = {value: lights.map(light => light.color)};
@@ -16,6 +18,7 @@ export function getMaterial(lights, intensity, color, diffuseColor, camera){
             shader.uniforms.baseColor = {value: color};
             shader.uniforms.diffuseColorObject = {value: diffuseColor};
             shader.uniforms.viewPos = {value: camera.position};
+            shader.uniforms.uTexture = {value: loader.load(urlTexture)};
 
             let patternVert = /*glsl*/`#include <uv_pars_vertex>`;
             shader.vertexShader = shader.vertexShader.replace(

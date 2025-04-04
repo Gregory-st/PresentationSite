@@ -43,7 +43,7 @@ finalColor = mix(finalColor.rgb, texture.rgb, texture.a);
         // Спекулярное освещение (модель Блинна-Фонга)
         vec3 halfDir = normalize(lightDir + viewDir);
         float spec = pow(max(dot(norm, halfDir), 0.0), shininess);
-        specular += spec * lightColor[i];
+        specular += spec * lightColor[i] * lightIntens[i];
     }
     
     vec3 result = (ambient + diffuse + specular) * finalColor;

@@ -3,7 +3,7 @@ varying vec2 vUv;
 varying vec3 vPosition;
 uniform sampler2D uTexture;
 
-#define COUNT_LIGHTS 3
+#define COUNT_LIGHTS 4
 
 uniform vec3 viewPos;
 uniform vec3 lightPos[COUNT_LIGHTS];
