@@ -1,13 +1,28 @@
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { RenderPass, EffectComposer, EffectPass, BloomEffect } from 'postprocessing'
+import * as THREE from 'three';
 import * as CART from '../src/model/Cart.js';
 import * as CARTM from '../src/model/CartMatte.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 
-const scene = new THREE.Scene()
-const width = window.innerWidth
-const heigth = window.innerHeight
+import volumeShaderVert from '../src/shaders/volume/shader.vert.js';
+import volumeShaderFrag from '../src/shaders/volume/shader.frag.js';
+import { float } from 'three/tsl';
+
+const scene = new THREE.Scene();
+const width = window.innerWidth;
+const heigth = window.innerHeight;
+
+let targetPositionCenter = new THREE.Vector3();
+let targetRotateCenter = new THREE.Vector3();
+let targetPositionSide = new THREE.Vector3();
+let targetRotateSide = new THREE.Vector3();
+
+let stepAnimatePosition = new THREE.Vector3();
+let stepAnimateRotate = new THREE.Vector3();
 
 scene.background = new THREE.Color(
     0.0, 
@@ -35,12 +50,12 @@ renderer.setSize(width, heigth);
 renderer.setPixelRatio(2);
 renderer.setClearColor('white', 1);
 
-const controll = new OrbitControls(camera, renderer.domElement);
+/*const controll = new OrbitControls(camera, renderer.domElement);
 controll.enableDamping = true;
 controll.dampingFactor = 1;
 controll.screenSpacePanning = false;
 controll.minDistance = 2;
-controll.maxDistance = 10;
+controll.maxDistance = 10;*/
 
 let ligths = [
     new THREE.RectAreaLight(0xE1BBFB, 3, 8, 8),
@@ -89,36 +104,47 @@ const geometry = await CART.getGeometry('../models/scene.gltf')
 const geometryLigthArea = await CART.getGeometry('../models/AreaLigth.gltf');
 const meshArea = new THREE.Mesh(
     geometryLigthArea,
-    new THREE.MeshStandardMaterial({
-        color: 0xE1BBFB,
-        emissive: 0xE1BBFB,
-        emissiveIntensity: 1.0
+    new THREE.MeshBasicMaterial({
+        color: 0xE1BBFB
     })
 );
 
 meshArea.position.set(0, -2, 2);
-meshArea.scale.set(2, 2, 2);
+meshArea.scale.set(3, 1, 3);
+meshArea.rotation.x = getRadian(-10);
 
 scene.add(meshArea);
 
 let materials1 = [
-    CART.getMaterial('../src/texture/company.png', ligths, 2.0, camera),
-    CART.getMaterial('../src/texture/logo.png',    ligths, 2.0, camera),
-    CART.getMaterial('../src/texture/logo.png',    ligths, 2.0, camera)
+    CART.getMaterial('../src/texture/company.png', ligths, 3.5, camera),
+    CART.getMaterial('../src/texture/logo.png',    ligths, 3.5, camera),
+    CART.getMaterial('../src/texture/logo.png',    ligths, 3.5, camera)
 ];
 const color = new THREE.Color(0x221358);
 const diffuseColor = new THREE.Color(0xfff);
 let materials2 = [
     CARTM.getMaterial('../src/texture/company.png', ligths, 15.0, color, diffuseColor, camera),
     CARTM.getMaterial('../src/texture/logo.png',    ligths, 15.0, color, diffuseColor, camera),
-    CARTM.getMaterial('../src/texture/logo.png',    ligths, 15.0, color, diffuseColor, camera)
+    CARTM.getMaterial('../src/texture/logo.png',    ligths, 15.0, color, diffuseColor, camera),
+    CARTM.getMaterial('../src/texture/logo.png',    ligths, 15.0, color, diffuseColor, camera),
 ];
+
+const meshIcoSphere = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(2, 32),
+    new THREE.MeshStandardMaterial({
+        color: 0x5F5F5F
+    })
+);
+meshIcoSphere.position.set(0, -5, 0);
+meshIcoSphere.scale.set(4, 1, 3);
+scene.add(meshIcoSphere);
 
 for(let i = 0; i < materials1.length; i++) {
     let mesh = new THREE.Mesh(geometry, materials1[i]);
     mesh.rotation.x = getRadian(-15 + (10 * i));
     mesh.rotation.y = getRadian(25 - (10 * i));
     mesh.rotation.z = getRadian(-25 - (10 * i));
+    mesh.name = 'card1' + i;
 
     mesh.position.x = 5 + i;    
     mesh.position.y = materials1.length - i - 2;
@@ -127,38 +153,200 @@ for(let i = 0; i < materials1.length; i++) {
     scene.add(mesh);
 }
 
-
+let lastmesh;
 for(let i = 0; i < materials2.length; i++){
     let mesh = new THREE.Mesh(geometry, materials2[i]);
     mesh.rotation.x = getRadian(15 - (10 * i));
     mesh.rotation.y = getRadian(-25 + (10 * i));
     mesh.rotation.z = getRadian(25 + (10 * i));
+    mesh.name = 'card2' + i;
 
     mesh.position.x = -5 - i;    
     mesh.position.y = materials2.length - i - 2;
     mesh.position.z = 0;  
 
     scene.add(mesh);
+    lastmesh = mesh;
 }
 
-const composer = new EffectComposer(renderer);
+lastmesh.position.set(0, -1, 0);
+lastmesh.rotation.x = getRadian(-30);
+lastmesh.rotation.y = getRadian(70);
+lastmesh.rotation.z = getRadian(0);
+lastmesh.name = 'center';
+
+targetPositionCenter.x = 0;
+targetPositionCenter.y = -1;
+targetPositionCenter.z = 0;
+
+targetRotateCenter.x = -30;
+targetRotateCenter.y = 70;
+targetRotateCenter.z = 0;
+
+const edgeColor = new THREE.Color(0x000000); // Цвет краёв
+const baseColor = new THREE.Color(0xE1BBFB); // Основной цвет
+const fadePower = 0.5; // Сила растушёвки
+const fadeDistance = 0.5; // Ширина области размытия
+const volume = new THREE.Mesh(
+    new THREE.CylinderGeometry(8, 4, 25, 32, 32, true),
+    new THREE.ShaderMaterial({
+        //color: 'white'
+        vertexShader: volumeShaderVert,
+        fragmentShader: volumeShaderFrag,
+        uniforms: {
+            uEdgeColor: { value: edgeColor },
+            uBaseColor: { value: baseColor },
+            uFadePower: { value: fadePower },
+            uFadeDistance: { value: fadeDistance }
+        },
+        transparent: true,
+        side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending,
+        opacity: 0.1
+    })
+);
+
+volume.position.y = 0;
+volume.rotation.y = getRadian(90);
+scene.add(volume);
+console.log(lastmesh.name);
+
+/*const composer = new EffectComposer(renderer);
 
 composer.addPass(new RenderPass(scene, camera));
-composer.addPass(new EffectPass(camera, new BloomEffect()));
+composer.addPass(new UnrealBloomPass(
+    new THREE.Vector2(window.innerWidth, window.innerHeight),
+    100,
+    100,
+    100
+));*/
+
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let obj = null;
+
+function onMouseClick(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(scene.children);
+    obj = intersects
+                    .filter(i => i.object.name.length > 0)
+                    .map(i => i.object)
+                    .at(0);
+    
+    targetPositionSide.x = obj.position.x;
+    targetPositionSide.y = obj.position.y;
+    targetPositionSide.z = obj.position.z;
+    
+    targetRotateSide.x = getAnge(obj.rotation.x);
+    targetRotateSide.y = getAnge(obj.rotation.y);
+    targetRotateSide.z = getAnge(obj.rotation.z);
+
+    stepAnimatePosition.x = getStep(targetPositionCenter.x, targetPositionSide.x, 1) * 2;
+    stepAnimatePosition.y = getStep(targetPositionCenter.y, targetPositionSide.y, 1) * 2;
+    stepAnimatePosition.z = getStep(targetPositionCenter.z, targetPositionSide.z, 1) * 2;
+
+    stepAnimateRotate.x = getStep(targetRotateCenter.x, targetRotateSide.x, 0);
+    stepAnimateRotate.y = getStep(targetRotateCenter.y, targetRotateSide.y, 0);
+    stepAnimateRotate.z = getStep(targetRotateCenter.z, targetRotateSide.z, 0);
+}
+window.addEventListener('click', onMouseClick);
 
 let an = 0;
+let isEnd = [];
 function animate(){
     requestAnimationFrame(animate);
     
-    an += 1;
-    if(an === 360) an = 0;
+    //composer.render();
+    renderer.render(scene, camera);
+    if(obj === null) return;
 
-    //renderer.render(scene, camera);
-    composer.render();
+    if(Math.abs(obj.position.x.toFixed(1)) != targetPositionCenter.x.toFixed(1)){
+        lastmesh.position.x -= stepAnimatePosition.x;
+        obj.position.x += stepAnimatePosition.x;
+    }
+    else{
+        stepAnimatePosition.x = 0;
+        if(isEnd.length === 0)
+            isEnd.push(true);
+    }
+    
+    if(obj.position.y.toFixed(1) != targetPositionCenter.y.toFixed(1)){
+        lastmesh.position.y -= stepAnimatePosition.y;
+        obj.position.y += stepAnimatePosition.y;
+    }
+    else{
+        stepAnimatePosition.y = 0;
+        if(isEnd.length === 1)
+            isEnd.push(true);
+    }
+
+    if(Math.abs(obj.position.z.toFixed(1)) != targetPositionCenter.z.toFixed(1)){
+         lastmesh.position.z -= stepAnimatePosition.z;
+         obj.position.z += stepAnimatePosition.z;
+    }
+    else{
+        stepAnimatePosition.z = 0;
+        if(isEnd.length === 2)
+            isEnd.push(true);
+    }
+
+    an = getAnge(obj.rotation.x);
+    an = Math.trunc(an);
+    if(an != targetRotateCenter.x){
+        obj.rotation.x += getRadian(stepAnimateRotate.x);
+        lastmesh.rotation.x -= getRadian(stepAnimateRotate.x);
+    }
+    else{
+        if(isEnd.length === 3)
+            isEnd.push(true);
+    }
+
+    an = getAnge(obj.rotation.y);
+    an = Math.trunc(an);
+    if(an != targetRotateCenter.y){
+        obj.rotation.y += getRadian(stepAnimateRotate.y);
+        lastmesh.rotation.y -= getRadian(stepAnimateRotate.y);
+    }
+    else{
+        if(isEnd.length === 4)
+            isEnd.push(true);
+    }
+
+    an = getAnge(obj.rotation.z);
+    an = Math.trunc(an);
+    if(an != targetRotateCenter.z){
+        obj.rotation.z += getRadian(stepAnimateRotate.z);
+        lastmesh.rotation.z -= getRadian(stepAnimateRotate.z);
+    }
+    else{
+        if(isEnd.length === 5)
+            isEnd.push(true);
+    }
+
+    if(isEnd.length === 6){
+        lastmesh = obj;
+        obj = null;
+        isEnd = [];
+        console.log(isEnd);
+    }
 }
 
 animate();
 
 function getRadian(ange){
-    return Math.PI / 180 * ange;
+    return Math.PI * ange / 180;
+}
+function getAnge(rad){
+    return 180 * rad / Math.PI;
+}
+function getStep(targetCenter, targetSide, countStep){
+    let step = targetCenter - targetSide;
+    if(step === 0) return 0;
+    step /= Math.abs(step);
+    step *= Math.pow(0.1, countStep);
+    return step;
 }
