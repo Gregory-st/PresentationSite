@@ -1,0 +1,50 @@
+.about-us{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    border-top: 2px dashed white;
+}
+.title{
+    margin: 5vw 2vw 4vw 2vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 40vw;
+}
+.title h1{
+    flex: 1;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(30px, 2vw, 60px);
+}
+.description{
+    flex: 1;
+}
+.description h2{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(12px, 1vw, 24px);
+}
+#desc{
+    margin-top: 1vw;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(7px, 1vw, 14px);
+    line-height: 200%;
+}
+.content{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5vw 2vw 4vw 2vw;    
+    border: 1px solid white;
+
+}
+.show{
+    padding: 1vw;
+    border-radius: 1vw;
+    border: 1px solid white;
+}
+.spliter{
+    border: 1px solid white;
+    padding: 10px;
+}

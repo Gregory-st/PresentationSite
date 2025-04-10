@@ -1,19 +1,12 @@
 import * as THREE from 'three';
 import * as CART from '../src/model/Cart.js';
 import * as CARTM from '../src/model/CartMatte.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 
 import volumeShaderVert from '../src/shaders/volume/shader.vert.js';
 import volumeShaderFrag from '../src/shaders/volume/shader.frag.js';
-import { float } from 'three/tsl';
 
 const scene = new THREE.Scene();
-const width = window.innerWidth;
+const width = window.innerWidth - 20;
 const heigth = window.innerHeight;
 
 let targetPositionCenter = new THREE.Vector3();
@@ -27,7 +20,7 @@ let stepAnimateRotate = new THREE.Vector3();
 scene.background = new THREE.Color(
     0.0, 
     0.0, 
-    0.004
+    0.0
 );
 
 const camera = new THREE.PerspectiveCamera(
@@ -47,15 +40,8 @@ const renderer = new THREE.WebGLRenderer(
     }
 );
 renderer.setSize(width, heigth);
-renderer.setPixelRatio(2);
+renderer.setPixelRatio(Math.max(2, window.devicePixelRatio));
 renderer.setClearColor('white', 1);
-
-/*const controll = new OrbitControls(camera, renderer.domElement);
-controll.enableDamping = true;
-controll.dampingFactor = 1;
-controll.screenSpacePanning = false;
-controll.minDistance = 2;
-controll.maxDistance = 10;*/
 
 let ligths = [
     new THREE.RectAreaLight(0xE1BBFB, 3, 8, 8),
@@ -81,24 +67,6 @@ ligths.forEach(ligth => {
     if(ligth.target != undefined)
         scene.add(ligth.target);
 });
-/*ligths.forEach(i => {
-    let helper;
-    switch(i.type){
-        case 'SpotLight':
-            helper = new THREE.SpotLightHelper(i);
-        break;
-        case 'PointLight':
-            helper = new THREE.PointLightHelper(i);
-        break;
-        case 'DirectionalLight':
-            helper = new THREE.DirectionalLightHelper(i);
-        break;
-        case 'RectAreaLight':
-            helper = new RectAreaLightHelper(i);
-        break;
-    }
-    scene.add(helper);
-});*/
 
 const geometry = await CART.getGeometry('../models/scene.gltf')
 const geometryLigthArea = await CART.getGeometry('../models/AreaLigth.gltf');
@@ -132,7 +100,9 @@ let materials2 = [
 const meshIcoSphere = new THREE.Mesh(
     new THREE.IcosahedronGeometry(2, 32),
     new THREE.MeshStandardMaterial({
-        color: 0x5F5F5F
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.2
     })
 );
 meshIcoSphere.position.set(0, -5, 0);
@@ -162,7 +132,7 @@ for(let i = 0; i < materials2.length; i++){
     mesh.name = 'card2' + i;
 
     mesh.position.x = -5 - i;    
-    mesh.position.y = materials2.length - i - 2;
+    mesh.position.y = materials2.length - i - 3;
     mesh.position.z = 0;  
 
     scene.add(mesh);
@@ -207,19 +177,9 @@ const volume = new THREE.Mesh(
 );
 
 volume.position.y = 0;
+volume.position.z = 0;
 volume.rotation.y = getRadian(90);
 scene.add(volume);
-console.log(lastmesh.name);
-
-/*const composer = new EffectComposer(renderer);
-
-composer.addPass(new RenderPass(scene, camera));
-composer.addPass(new UnrealBloomPass(
-    new THREE.Vector2(window.innerWidth, window.innerHeight),
-    100,
-    100,
-    100
-));*/
 
 
 const raycaster = new THREE.Raycaster();
@@ -227,6 +187,8 @@ const mouse = new THREE.Vector2();
 let obj = null;
 
 function onMouseClick(event) {
+    if(obj !== null) return;
+
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
@@ -239,7 +201,7 @@ function onMouseClick(event) {
     
     targetPositionSide.x = obj.position.x;
     targetPositionSide.y = obj.position.y;
-    targetPositionSide.z = obj.position.z;
+    targetPositionSide.z = obj.position.z + 1;
     
     targetRotateSide.x = getAnge(obj.rotation.x);
     targetRotateSide.y = getAnge(obj.rotation.y);
@@ -248,7 +210,7 @@ function onMouseClick(event) {
     stepAnimatePosition.x = getStep(targetPositionCenter.x, targetPositionSide.x, 1) * 2;
     stepAnimatePosition.y = getStep(targetPositionCenter.y, targetPositionSide.y, 1) * 2;
     stepAnimatePosition.z = getStep(targetPositionCenter.z, targetPositionSide.z, 1) * 2;
-
+    
     stepAnimateRotate.x = getStep(targetRotateCenter.x, targetRotateSide.x, 0);
     stepAnimateRotate.y = getStep(targetRotateCenter.y, targetRotateSide.y, 0);
     stepAnimateRotate.z = getStep(targetRotateCenter.z, targetRotateSide.z, 0);
@@ -256,22 +218,28 @@ function onMouseClick(event) {
 window.addEventListener('click', onMouseClick);
 
 let an = 0;
-let isEnd = [];
+let isEnd = 0;
 function animate(){
     requestAnimationFrame(animate);
     
+    if(canvas.clientWidth != window.innerWidth || canvas.clientHeight != window.innerHeight) {
+        renderer.setSize(window.innerWidth - 20, window.innerHeight);
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+    }
+
     //composer.render();
     renderer.render(scene, camera);
     if(obj === null) return;
-
+    
     if(Math.abs(obj.position.x.toFixed(1)) != targetPositionCenter.x.toFixed(1)){
         lastmesh.position.x -= stepAnimatePosition.x;
         obj.position.x += stepAnimatePosition.x;
     }
     else{
         stepAnimatePosition.x = 0;
-        if(isEnd.length === 0)
-            isEnd.push(true);
+        if(isEnd === 0)
+            isEnd += 1;
     }
     
     if(obj.position.y.toFixed(1) != targetPositionCenter.y.toFixed(1)){
@@ -280,8 +248,8 @@ function animate(){
     }
     else{
         stepAnimatePosition.y = 0;
-        if(isEnd.length === 1)
-            isEnd.push(true);
+        if(isEnd === 1)
+            isEnd += 1;
     }
 
     if(Math.abs(obj.position.z.toFixed(1)) != targetPositionCenter.z.toFixed(1)){
@@ -290,47 +258,47 @@ function animate(){
     }
     else{
         stepAnimatePosition.z = 0;
-        if(isEnd.length === 2)
-            isEnd.push(true);
+        if(isEnd === 2)
+            isEnd += 1;
     }
 
     an = getAnge(obj.rotation.x);
-    an = Math.trunc(an);
+    an = Math.round(an);
     if(an != targetRotateCenter.x){
         obj.rotation.x += getRadian(stepAnimateRotate.x);
         lastmesh.rotation.x -= getRadian(stepAnimateRotate.x);
     }
     else{
-        if(isEnd.length === 3)
-            isEnd.push(true);
+        if(isEnd === 3)
+            isEnd += 1;
     }
 
     an = getAnge(obj.rotation.y);
-    an = Math.trunc(an);
+    an = Math.round(an);
     if(an != targetRotateCenter.y){
         obj.rotation.y += getRadian(stepAnimateRotate.y);
         lastmesh.rotation.y -= getRadian(stepAnimateRotate.y);
     }
     else{
-        if(isEnd.length === 4)
-            isEnd.push(true);
+        if(isEnd === 4)
+            isEnd += 1;
     }
 
     an = getAnge(obj.rotation.z);
-    an = Math.trunc(an);
+    an = Math.round(an);
     if(an != targetRotateCenter.z){
         obj.rotation.z += getRadian(stepAnimateRotate.z);
         lastmesh.rotation.z -= getRadian(stepAnimateRotate.z);
     }
     else{
-        if(isEnd.length === 5)
-            isEnd.push(true);
+        if(isEnd === 5)
+            isEnd += 1;
     }
 
-    if(isEnd.length === 6){
+    if(isEnd === 6){
         lastmesh = obj;
         obj = null;
-        isEnd = [];
+        isEnd = 0;
         console.log(isEnd);
     }
 }
@@ -349,4 +317,13 @@ function getStep(targetCenter, targetSide, countStep){
     step /= Math.abs(step);
     step *= Math.pow(0.1, countStep);
     return step;
+}
+function needResizeRendererToDisplay(render) {
+    const wid = window.innerWidth;
+    const heig = window.innerHeight;
+    const needResize = canvas.width !== wid || canvas.heigth !== heig;
+    if(needResize) {
+        render.setSize(wid, heig, false);
+    }
+    return needResize;
 }
