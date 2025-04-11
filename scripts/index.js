@@ -6,6 +6,7 @@ import volumeShaderVert from '../src/shaders/volume/shader.vert.js';
 import volumeShaderFrag from '../src/shaders/volume/shader.frag.js';
 
 const scene = new THREE.Scene();
+const canvas = document.querySelector("canvas.threejs");
 const width = window.innerWidth - 20;
 const heigth = window.innerHeight;
 
@@ -31,7 +32,6 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.z = 8;
 
-const canvas = document.querySelector("canvas.threejs");
 
 const renderer = new THREE.WebGLRenderer(
     {
@@ -40,7 +40,7 @@ const renderer = new THREE.WebGLRenderer(
     }
 );
 renderer.setSize(width, heigth);
-renderer.setPixelRatio(Math.max(2, window.devicePixelRatio));
+renderer.setPixelRatio(Math.max(1, window.devicePixelRatio));
 renderer.setClearColor('white', 1);
 
 let ligths = [
@@ -198,7 +198,11 @@ function onMouseClick(event) {
                     .filter(i => i.object.name.length > 0)
                     .map(i => i.object)
                     .at(0);
-    
+    if(!obj) {
+        obj = null;
+        return;
+    } 
+
     targetPositionSide.x = obj.position.x;
     targetPositionSide.y = obj.position.y;
     targetPositionSide.z = obj.position.z + 1;
@@ -220,16 +224,15 @@ window.addEventListener('click', onMouseClick);
 let an = 0;
 let isEnd = 0;
 function animate(){
-    requestAnimationFrame(animate);
     
-    if(canvas.clientWidth != window.innerWidth || canvas.clientHeight != window.innerHeight) {
+    if(canvas.clientWidth != (window.innerWidth - 20) || canvas.clientHeight != window.innerHeight) {
         renderer.setSize(window.innerWidth - 20, window.innerHeight);
         camera.aspect = canvas.clientWidth / canvas.clientHeight;
         camera.updateProjectionMatrix();
     }
-
-    //composer.render();
+       
     renderer.render(scene, camera);
+    requestAnimationFrame(animate);
     if(obj === null) return;
     
     if(Math.abs(obj.position.x.toFixed(1)) != targetPositionCenter.x.toFixed(1)){
@@ -299,7 +302,6 @@ function animate(){
         lastmesh = obj;
         obj = null;
         isEnd = 0;
-        console.log(isEnd);
     }
 }
 
@@ -317,13 +319,4 @@ function getStep(targetCenter, targetSide, countStep){
     step /= Math.abs(step);
     step *= Math.pow(0.1, countStep);
     return step;
-}
-function needResizeRendererToDisplay(render) {
-    const wid = window.innerWidth;
-    const heig = window.innerHeight;
-    const needResize = canvas.width !== wid || canvas.heigth !== heig;
-    if(needResize) {
-        render.setSize(wid, heig, false);
-    }
-    return needResize;
 }
