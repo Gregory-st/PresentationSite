@@ -220,9 +220,22 @@ function onMouseClick(event) {
     stepAnimateRotate.z = getStep(targetRotateCenter.z, targetRotateSide.z, 0);
 }
 window.addEventListener('click', onMouseClick);
+window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = (scrollY / maxScrollY) * 100;
+  
+    if(scrollPercent >= 60 && animationId){
+        renderStop();
+    }
+    else if(scrollPercent < 60 && !animationId){
+        renderStart();
+    }
+  });
 
 let an = 0;
 let isEnd = 0;
+let animationId = null;
 function animate(){
     
     if(canvas.clientWidth != (window.innerWidth - 20) || canvas.clientHeight != window.innerHeight) {
@@ -232,7 +245,7 @@ function animate(){
     }
        
     renderer.render(scene, camera);
-    requestAnimationFrame(animate);
+    animationId = requestAnimationFrame(animate);
     if(obj === null) return;
     
     if(Math.abs(obj.position.x.toFixed(1)) != targetPositionCenter.x.toFixed(1)){
@@ -305,7 +318,7 @@ function animate(){
     }
 }
 
-animate();
+renderStart();
 
 function getRadian(ange){
     return Math.PI * ange / 180;
@@ -319,4 +332,15 @@ function getStep(targetCenter, targetSide, countStep){
     step /= Math.abs(step);
     step *= Math.pow(0.1, countStep);
     return step;
+}
+function renderStart(){
+    if(!animationId){
+        animate();
+    }
+}
+function renderStop() {
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
 }

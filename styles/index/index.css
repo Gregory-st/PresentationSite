@@ -6,7 +6,13 @@
 body{
     background: black;
 }
-
+.sub-body{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    border-top: 2px dashed white;
+}
 .threejs{
     position: absolute;
     left: 0;
