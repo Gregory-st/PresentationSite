@@ -1,31 +1,53 @@
-.order-footer *{
-    background: transparent;
-    border: none;
-}
-.order-footer{
-    margin: 2vw 20vw;
-}
 .flex{
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 1vw;
 }
+.flex-column{
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    gap: 1vw;
+    flex-direction: column;
+}
+.order-footer *{
+    background: transparent;
+    border: none;
+}
+.order-submit{
+    margin: 5vw 20vw;
+    align-items: stretch;
+    gap: 5vw;
+}
 .order-form{
     flex-direction: column;
     align-items: stretch;
+    flex: 2;
 }
-.order-title{
-    gap: 2vw;
-    flex-direction: column;
+.order-form h1{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(15px, 2vw, 25px);
 }
-.order-person-info{
-    flex-direction: column;
+.order-title *{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(10px, 1vw, 20px);
+}
+.order-title h1{
+    font-size: clamp(20px, 2vw, 30px);
+}
+.person-container{
     align-items: stretch;
+}
+.inputs{
+    flex: 2;
+}
+.order-person-info label{
+    padding: 10px;
+    font-size: clamp(10px, 1vw, 20px);
 }
 .order-person-info input{
     outline: none;
-    flex: 1;
     padding: 10px;
     border-radius: 10px;
     font-size: clamp(10px, 1vw, 20px);
@@ -62,6 +84,7 @@
     display: flex;
     gap: 10px;
     cursor: pointer;
+    font-size: clamp(10px, 1vw, 20px);
 }
 #price input[type="radio"]{
     display: none;
@@ -76,6 +99,18 @@
 }
 
 #price input:checked + #price-checked{
+    border: 1px solid rgb(225, 187, 251);
+    box-shadow: inset 0px 0px 10px 0px rgba(170, 46, 255, 1);
+}
+#send{
+    padding: 1vw;
+    border-radius: 1vw;
+    border: 1px solid rgb(146, 70, 252);
+    font-size: clamp(10px, 1vw, 15px);
+    font-family: Arial, Helvetica, sans-serif;
+}
+#send:hover{
+    cursor: pointer;
     border: 1px solid rgb(225, 187, 251);
     box-shadow: inset 0px 0px 10px 0px rgba(170, 46, 255, 1);
 }

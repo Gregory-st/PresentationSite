@@ -1,3 +1,7 @@
+footer{
+    padding-bottom: 1vw;
+    background: linear-gradient(130deg, black 70%, rgba(146, 70, 252, 0.5) 100%);
+}
 .split{
     margin: 2vw 0;
     border-top: solid 1px rgba(255, 255, 255, 0.5);
@@ -81,7 +85,7 @@
     background: linear-gradient(210deg, rgb(6, 11, 33) 75%,rgb(19, 25, 52) 95%),rgb(255, 255, 255);
 }
 .last-content{
-    margin: 0 2vw 1vw 2vw;
+    margin: 0 2vw;
     display: flex;
     justify-content: space-between;
     align-items: center;

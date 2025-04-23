@@ -49,15 +49,17 @@ body{
     align-items: center;
     gap: 5vw;
 }
-.naming-buttons button {
+.naming-buttons *{
     padding: 1vw;
     border-radius: 1vw;
     background-color: white;
+    text-decoration: none;
     color: black;
     border: none;
     font-size: clamp(8px, 1vw, 16px);
+    font-family: Arial, Helvetica, sans-serif;
 }
-.naming-buttons button:hover {
+.naming-buttons *:hover {
     cursor: pointer;
 }
 #works{
