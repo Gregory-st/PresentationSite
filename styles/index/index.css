@@ -3,6 +3,9 @@
     padding: 0;
     color: white;
 }
+html {
+    scroll-behavior: smooth;
+}
 body{
     background: black;
 }

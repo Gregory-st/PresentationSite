@@ -5,10 +5,16 @@ import * as CARTM from '../src/model/CartMatte.js';
 import volumeShaderVert from '../src/shaders/volume/shader.vert.js';
 import volumeShaderFrag from '../src/shaders/volume/shader.frag.js';
 
+
 const scene = new THREE.Scene();
 const canvas = document.querySelector("canvas.threejs");
 const width = window.innerWidth - 20;
 const heigth = window.innerHeight;
+let animationId = null;
+
+window.addEventListener('click', onMouseClick);
+window.addEventListener('scroll', settingScroll);
+window.addEventListener('load', settingScroll);
 
 let targetPositionCenter = new THREE.Vector3();
 let targetRotateCenter = new THREE.Vector3();
@@ -219,25 +225,10 @@ function onMouseClick(event) {
     stepAnimateRotate.y = getStep(targetRotateCenter.y, targetRotateSide.y, 0);
     stepAnimateRotate.z = getStep(targetRotateCenter.z, targetRotateSide.z, 0);
 }
-window.addEventListener('click', onMouseClick);
-window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollPercent = (scrollY / maxScrollY) * 100;
-  
-    if(scrollPercent >= 60 && animationId){
-        renderStop();
-    }
-    else if(scrollPercent < 60 && !animationId){
-        renderStart();
-    }
-  });
 
 let an = 0;
 let isEnd = 0;
-let animationId = null;
 function animate(){
-    
     if(canvas.clientWidth != (window.innerWidth - 20) || canvas.clientHeight != window.innerHeight) {
         renderer.setSize(window.innerWidth - 20, window.innerHeight);
         camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -342,5 +333,24 @@ function renderStop() {
     if (animationId) {
         cancelAnimationFrame(animationId);
         animationId = null;
+    }
+}
+function settingScroll(){
+    const scrollY = window.scrollY;
+    const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = (scrollY / maxScrollY) * 100;
+  
+    if(scrollPercent >= 40){
+        document.querySelector('.menu').style.setProperty('background-color', 'black');
+    }
+    else{
+        document.querySelector('.menu').style.setProperty('background-color', 'transparent');
+    }
+
+    if(scrollPercent >= 60 && animationId){
+        renderStop();
+    }
+    else if(scrollPercent < 60 && !animationId){
+        renderStart();
     }
 }
