@@ -5,7 +5,6 @@ import * as CARTM from '../src/model/CartMatte.js';
 import volumeShaderVert from '../src/shaders/volume/shader.vert.js';
 import volumeShaderFrag from '../src/shaders/volume/shader.frag.js';
 
-
 const scene = new THREE.Scene();
 const canvas = document.querySelector("canvas.threejs");
 const width = window.innerWidth - 20;
@@ -14,7 +13,18 @@ let animationId = null;
 
 window.addEventListener('click', onMouseClick);
 window.addEventListener('scroll', settingScroll);
-window.addEventListener('load', settingScroll);
+window.addEventListener('load', () => {
+    const scrollY = window.scrollY;
+    const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = (scrollY / maxScrollY) * 100;
+  
+    if(scrollPercent >= 40){
+        document.querySelector('.menu').style.setProperty('background-color', 'black');
+    }
+    else{
+        document.querySelector('.menu').style.setProperty('background-color', 'transparent');
+    }
+});
 
 let targetPositionCenter = new THREE.Vector3();
 let targetRotateCenter = new THREE.Vector3();
@@ -217,9 +227,9 @@ function onMouseClick(event) {
     targetRotateSide.y = getAnge(obj.rotation.y);
     targetRotateSide.z = getAnge(obj.rotation.z);
 
-    stepAnimatePosition.x = getStep(targetPositionCenter.x, targetPositionSide.x, 1) * 2;
-    stepAnimatePosition.y = getStep(targetPositionCenter.y, targetPositionSide.y, 1) * 2;
-    stepAnimatePosition.z = getStep(targetPositionCenter.z, targetPositionSide.z, 1) * 2;
+    stepAnimatePosition.x = getStep(targetPositionCenter.x, targetPositionSide.x, 1);
+    stepAnimatePosition.y = getStep(targetPositionCenter.y, targetPositionSide.y, 1);
+    stepAnimatePosition.z = getStep(targetPositionCenter.z, targetPositionSide.z, 1);
     
     stepAnimateRotate.x = getStep(targetRotateCenter.x, targetRotateSide.x, 0);
     stepAnimateRotate.y = getStep(targetRotateCenter.y, targetRotateSide.y, 0);
@@ -237,8 +247,8 @@ function animate(){
        
     renderer.render(scene, camera);
     animationId = requestAnimationFrame(animate);
-    if(obj === null) return;
-    
+    if(!obj) return;
+
     if(Math.abs(obj.position.x.toFixed(1)) != targetPositionCenter.x.toFixed(1)){
         lastmesh.position.x -= stepAnimatePosition.x;
         obj.position.x += stepAnimatePosition.x;
@@ -271,6 +281,7 @@ function animate(){
 
     an = getAnge(obj.rotation.x);
     an = Math.round(an);
+
     if(an != targetRotateCenter.x){
         obj.rotation.x += getRadian(stepAnimateRotate.x);
         lastmesh.rotation.x -= getRadian(stepAnimateRotate.x);
@@ -302,6 +313,15 @@ function animate(){
             isEnd += 1;
     }
 
+    //stepAnimateRotate.x = getLength(targetPositionCenter, obj.position) / getLength(targetPositionCenter, targetPositionSide) * targetRotateCenter.x;
+    //stepAnimateRotate.y = getLength(targetPositionCenter, obj.position) / getLength(targetPositionCenter, targetPositionSide) * targetRotateCenter.y;
+    //stepAnimateRotate.z = getLength(targetPositionCenter, obj.position) / getLength(targetPositionCenter, targetPositionSide) * targetRotateCenter.z;
+    /*let progress = 1 - getLength(targetPositionCenter, obj.position) / getLength(targetPositionCenter, targetPositionSide);
+    console.log(1 - getLength(targetPositionCenter, obj.position) / getLength(targetPositionCenter, targetPositionSide));
+    console.log('---------------------------------------------')
+    console.log(Math.abs(targetRotateCenter.x - targetRotateSide.x) * progress);
+    console.log('##############################################')*/
+
     if(isEnd === 6){
         lastmesh = obj;
         obj = null;
@@ -324,6 +344,19 @@ function getStep(targetCenter, targetSide, countStep){
     step *= Math.pow(0.1, countStep);
     return step;
 }
+
+function getLength(targetCenter, targetSide){
+    //let step = getStep(targetCenter, targetSide, 0);
+    let length = Math.abs(
+        Math.sqrt(
+            Math.pow(targetCenter.x - targetSide.x, 2) +
+            Math.pow(targetCenter.y - targetSide.y, 2) +
+            Math.pow(targetCenter.z - targetSide.z, 2)
+        )
+    );
+    return Math.round(length);
+}
+
 function renderStart(){
     if(!animationId){
         animate();
