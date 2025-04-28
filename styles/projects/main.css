@@ -16,6 +16,15 @@ body{
     position: relative;
     opacity: 0;
 }
+.spliter{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.strech{
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
 
 .threejs{
     position: absolute;
@@ -24,4 +33,31 @@ body{
     width: 100vw;
     height: 100vh;
     z-index: -1;
+}
+.menu-spliter{
+    flex: 1;
+}
+.content-spliter{
+    flex: 3;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 5vw;
+    grid-row-gap: 5vh;
+    margin: 0 10vw;
+}
+.header-card{
+    display: flex;
+    justify-content: flex-end;
+    gap: 1vw;
+}
+.card {
+    border: solid 1px white;
+    padding: 1vw;
+    border-radius: 1vw;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+.card h2{
+    padding: 10px;
+    border-radius: 10px;
+    border: solid 1px rgba(100, 100, 100, 1);
 }

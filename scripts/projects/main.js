@@ -4,8 +4,8 @@ import { BufferGeometryUtils } from 'three/examples/jsm/Addons.js';
 
 const scene = new THREE.Scene();
 const canvas = document.querySelector("canvas.threejs");
-const width = canvas.clientWidth;  
-const heigth = canvas.clientHeight;
+let width = canvas.clientWidth;  
+let heigth = canvas.clientHeight;
 
 const camera = new THREE.PerspectiveCamera(
     6,
@@ -75,9 +75,9 @@ function getPath(radius, fineness, reverse) {
     const extrusion = {
       amount: amount,
       bevelEnabled: true,
-      bevelThickness: 5,
+      bevelThickness: 0.2,
       bevelSize: 0.2,
-      bevelSegments: 1
+      bevelSegments: 5
     };
     const geo = new THREE.ExtrudeGeometry(shape, extrusion);
     geo.normalizeNormals();
@@ -91,6 +91,7 @@ function getPath(radius, fineness, reverse) {
     });
     geo.rotateX(Math.PI * 0.5);
     geo.rotateZ(Math.PI);
+    geo.scale(1, 4, 1);
     return geo;
   }
 
@@ -127,45 +128,67 @@ sun.position.set(0, 50, 0);
 scene.add(sun);
 
 const lightGroups = [];
-for (let i = 0; i < 3; i++) {
+const countSphere = 5;
+for (let i = 0; i < countSphere; i++) {
   const group = new THREE.Group();
-  const pt = new THREE.PointLight(0xf82c91, 4.0, 6, 1.0);
+  const pt = new THREE.PointLight(0xAA2EFF, 6, 6, 1.0);
   group.add(pt);
   const mesh = new THREE.Mesh(
     new THREE.SphereGeometry(2, 16, 16),
-    new THREE.MeshBasicMaterial({ color: 0xf82c91 })
+    new THREE.MeshBasicMaterial({ color: 0xAA2EFF })
   );
   group.add(mesh);
   group.position.set(0, -5, 0);
   scene.add(group);
-  lightGroups.push(group);
+  lightGroups.push([group, 
+    gsap.timeline({
+      repeat: -1,
+      repeatDelay: 0,
+      defaults: {
+        ease: 'power1.inOut',
+        duration: 1
+      }
+    })
+  ]);
 }
 
-const mainTl = new gsap.timeline({
-    repeat: -1,         // бесконечный повтор
-    defaults: { ease: "none" } // дефолтный easing
-});
+const replace = (radius + offset) * 2;
+const ramp = [-3, 3];
 lightGroups.forEach(group => animateGroup(group));
 function animateGroup(group) {
-  const tl = gsap.timeline({
-    repeat: -1,         // бесконечный повтор
-    yoyo: true,         // реверс при каждом повторе
-    defaults: { ease: "none" } // дефолтный easing
-  });
-  tl.set(group.position, {
-    x: THREE.MathUtils.randInt(-2, 2) * 12.4 + 6.2,
-    z: THREE.MathUtils.randInt(-2, 2) * 12.4 + 6.2
+  group[1].delay(THREE.MathUtils.randFloat(0, 0.5));
+  group[1].set(group[0].position, {
+    x: THREE.MathUtils.randInt(ramp[0], ramp[1]) * replace,
+    z: THREE.MathUtils.randInt(ramp[0], ramp[1]) * replace
   })
-  .to(group.position, 2, { y: 18, ease: 'bounce.inOut' })
-  .to(group.children[0], 1.2, { intensity: 4.0, distance: 18, ease: 'bounce.inOut' }, '-=1.2');
-  tl.paused(true);
-  mainTl.to(tl, 1.2, { 
-    progress: 1, 
-    ease: 'bounce.inOut', 
-    onComplete: () => animateGroup(group), 
-    delay: THREE.MathUtils.randFloat(0, 0.8) }, 
-    mainTl.time()
-);
+  .to(group[0].position, {
+    y: 18,
+    onStart: () => {
+      gsap.to(group[0].children[0], {
+        itencity: 50,
+        distance: 50,
+        delay: 0.3,
+        duration: 0.7,
+        ease: 'power1.inOut',
+        repeat: 0
+      })
+    }
+  })
+  .to(group[0].position, {
+    y: -10,
+    onStart: () => {
+      gsap.to(group[0].children[0], {
+        itencity: 6,
+        distance: 6,
+        duration: 0.5,
+        ease: 'power1.inOut',
+        repeat: 0
+      })
+    },
+    onComplete: () => {
+      animateGroup(group);
+    }
+  })
 }
 
 function render() {
