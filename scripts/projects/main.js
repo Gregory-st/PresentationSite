@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
-import { BufferGeometryUtils } from 'three/examples/jsm/Addons.js';
 
 const scene = new THREE.Scene();
 const canvas = document.querySelector("canvas.threejs");
@@ -9,7 +8,7 @@ let heigth = canvas.clientHeight;
 
 const camera = new THREE.PerspectiveCamera(
     6,
-    window.innerWidth / window.innerHeight,
+    width / heigth,
     0.1,
     800
 );
@@ -30,7 +29,7 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 window.addEventListener('resize', () => {
-    width = canvas.clientWidth;
+    width = window.innerWidth;
     heigth = canvas.clientHeight;
     renderer.setSize(width, heigth);
     camera.aspect = width / heigth;
@@ -77,7 +76,7 @@ function getPath(radius, fineness, reverse) {
       bevelEnabled: true,
       bevelThickness: 0.2,
       bevelSize: 0.2,
-      bevelSegments: 5
+      bevelSegments: 2
     };
     const geo = new THREE.ExtrudeGeometry(shape, extrusion);
     geo.normalizeNormals();
@@ -99,16 +98,14 @@ const sideLength = 10;
 const radius = 6;
 const thickness = 2;
 const offset = 0.3;
-const tubeGeo = createTubeGeometry(radius, thickness, 15);
+const tubeGeo = createTubeGeometry(radius, thickness, 10);
 
 const materials = [
-    new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 1.0, metalness: 0.0, flatShading: true, side: THREE.DoubleSide }),
-    new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.6, metalness: 0.0, flatShading: true, side: THREE.DoubleSide })
+    new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 1.0, flatShading: false, side: THREE.DoubleSide }),
+    new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.6, flatShading: false, side: THREE.DoubleSide })
 ];
 
-const matrix = [];
 for(let x = 0; x < sideLength; x++) {
-    matrix[x] = [];
     for(let y = 0; y < sideLength; y++) {
         const t = tubeGeo.clone();
         const mesh = new THREE.Mesh(t, materials);
@@ -116,7 +113,6 @@ for(let x = 0; x < sideLength; x++) {
         coord *= (sideLength / 2 * (radius + offset) * 2);
         mesh.position.set(coord + x * (radius + offset) * 2, 0, coord + y * (radius + offset) * 2 + 15);
         scene.add(mesh);
-        matrix[x][y] = mesh;
     }
 }
 
@@ -134,8 +130,11 @@ for (let i = 0; i < countSphere; i++) {
   const pt = new THREE.PointLight(0xAA2EFF, 6, 6, 1.0);
   group.add(pt);
   const mesh = new THREE.Mesh(
-    new THREE.SphereGeometry(2, 16, 16),
-    new THREE.MeshBasicMaterial({ color: 0xAA2EFF })
+    new THREE.IcosahedronGeometry(2, 3),
+    new THREE.MeshBasicMaterial(
+      { 
+        color: 0xAA2EFF
+      })
   );
   group.add(mesh);
   group.position.set(0, -5, 0);
@@ -165,8 +164,8 @@ function animateGroup(group) {
     y: 18,
     onStart: () => {
       gsap.to(group[0].children[0], {
-        itencity: 50,
-        distance: 50,
+        itencity: 80,
+        distance: 80,
         delay: 0.3,
         duration: 0.7,
         ease: 'power1.inOut',
@@ -176,7 +175,7 @@ function animateGroup(group) {
   })
   .to(group[0].position, {
     y: -10,
-    onStart: () => {
+   onStart: () => {
       gsap.to(group[0].children[0], {
         itencity: 6,
         distance: 6,
