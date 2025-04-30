@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass }    from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 const scene = new THREE.Scene();
 const canvas = document.querySelector("canvas.threejs");
@@ -35,6 +38,7 @@ window.addEventListener('resize', () => {
     camera.aspect = width / heigth;
     camera.updateProjectionMatrix();
 });
+window.addEventListener('scroll', settingScroll);
 
 function getPath(radius, fineness, reverse) {
     const c = radius * 0.55191502449;
@@ -98,7 +102,7 @@ const sideLength = 10;
 const radius = 6;
 const thickness = 2;
 const offset = 0.3;
-const tubeGeo = createTubeGeometry(radius, thickness, 10);
+const tubeGeo = createTubeGeometry(radius, thickness, 32);
 
 const materials = [
     new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 1.0, flatShading: false, side: THREE.DoubleSide }),
@@ -127,13 +131,15 @@ const lightGroups = [];
 const countSphere = 5;
 for (let i = 0; i < countSphere; i++) {
   const group = new THREE.Group();
-  const pt = new THREE.PointLight(0xAA2EFF, 6, 6, 1.0);
-  group.add(pt);
+  //const pt = new THREE.PointLight(0xAA2EFF, 6, 6, 1.0);
+  //group.add(pt);
   const mesh = new THREE.Mesh(
     new THREE.IcosahedronGeometry(2, 3),
-    new THREE.MeshBasicMaterial(
+    new THREE.MeshStandardMaterial(
       { 
-        color: 0xAA2EFF
+        color: 0xAA2EFF,
+        emissive: 0xAA2EFF,
+        emissiveIntensity: 3
       })
   );
   group.add(mesh);
@@ -162,7 +168,7 @@ function animateGroup(group) {
   })
   .to(group[0].position, {
     y: 18,
-    onStart: () => {
+   /* onStart: () => {
       gsap.to(group[0].children[0], {
         itencity: 80,
         distance: 80,
@@ -171,11 +177,11 @@ function animateGroup(group) {
         ease: 'power1.inOut',
         repeat: 0
       })
-    }
+    }*/
   })
   .to(group[0].position, {
     y: -10,
-   onStart: () => {
+   /*onStart: () => {
       gsap.to(group[0].children[0], {
         itencity: 6,
         distance: 6,
@@ -183,15 +189,40 @@ function animateGroup(group) {
         ease: 'power1.inOut',
         repeat: 0
       })
-    },
+    },*/
     onComplete: () => {
       animateGroup(group);
     }
   })
 }
 
+let animationId = null;
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloomPass = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  1,   // strength
+  1,   // radius
+  0.01   // threshold
+);
+composer.addPass(bloomPass);
 function render() {
-    renderer.render(scene, camera);
-    requestAnimationFrame(render);
+    composer.render();
+    //renderer.render(scene, camera);
+    animationId = requestAnimationFrame(render);
+}
+render();
+
+function settingScroll(){
+  const scrollY = window.scrollY;
+  const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+  const scrollPercent = (scrollY / maxScrollY) * 100;
+
+  if(scrollPercent == 100 && animationId){
+    cancelAnimationFrame(animationId);
+    animationId = null;
   }
-  render();
+  else if(scrollPercent < 100 && !animationId){
+    render();
+  }
+}

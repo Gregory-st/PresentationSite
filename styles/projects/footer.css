@@ -1,0 +1,6 @@
+footer{
+    background: linear-gradient(130deg, black 70%, rgba(100, 24, 206, 1) 100%);
+    margin-top: 5vh;
+    padding-top: 10vh;
+    mask-image: linear-gradient(to bottom, transparent 0, black 10%);
+}

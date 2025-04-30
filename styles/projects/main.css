@@ -6,6 +6,9 @@
     font-family: Arial, Helvetica, sans-serif;
     font-size: clamp(10px, 1vw, 15px);
 }
+html {
+    scroll-behavior: smooth;
+}
 body{
     background-color: black;
     overflow-x: hidden;
@@ -13,14 +16,9 @@ body{
 .menu{
     background-color: black;
 }
-.static{
-    position: relative;
-    opacity: 0;
-}
 .spliter{
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
 }
 .strech{
     grid-column-start: 1;
@@ -41,13 +39,42 @@ body{
     margin: 4vh;
 }
 .spliter{
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
     margin-top: 10vh;
 }
 .menu-spliter{
-    flex: 1;
+    flex: 0;
+    flex-grow: 1;
+    margin: 0 2vw;
+    padding: 1vw;
+    border: 1px solid rgb(225, 187, 251);
+    box-shadow: inset 0px 0px 10px 0px rgba(170, 46, 255, 1);
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 1vw;
+}
+.menu-spliter h1{
+    margin-bottom: 2vh;
+    font-size: clamp(15px, 1vw, 20px);
+}
+.menu-spliter div{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+    justify-content: center;
+    gap: 1vw;
+}
+.menu-spliter div *{
+    border: 1px solid white;
+    padding: 30px;
+    border-radius: 20px;
 }
 .content-spliter{
-    flex: 3;
+    flex: 1;
+    flex-shrink: 0;
+    flex-grow: 5;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 5vw;

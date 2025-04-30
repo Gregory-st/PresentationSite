@@ -9,8 +9,12 @@
     gap: 25vw;
     padding: 1vw;
     z-index: 1;
+    mask-image: linear-gradient(to top, transparent 0, black 10%);
 }
-
+.static{
+    position: relative;
+    opacity: 0;
+}
 .menu *{
     flex: 0;
     display: flex;

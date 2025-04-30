@@ -1,0 +1,120 @@
+*{
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(10px, 1vw, 15px);
+}
+html {
+    scroll-behavior: smooth;
+}
+body{
+    background-color: black;
+    overflow-x: hidden;
+}
+main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20vh;
+}
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 3vh 2vw;
+}
+header h1, header span {
+    flex: 1;
+    flex-shrink: 0;
+    flex-grow: 3;
+    font-size: 3rem;
+}
+header h2{
+    font-size: clamp(20px, 2vw, 25px);
+}
+header div{
+    flex: 0;
+    flex-shrink: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+.text-scroll{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 5vh;
+    padding: 20px;
+    border: solid 1px white;
+    border-radius: 10px;
+    mask-image: linear-gradient(to top, transparent 5%, black 48%, black 52%, transparent 95%);
+}
+.text-scroll * {
+    font-size: 3rem;
+}
+.line-code{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.line-code::after{
+    content: "";
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    height: 2px;
+    width: 80%;
+    background-color: rgba(100, 24, 206, 0.5);
+}
+.line-code__top{
+    top: 0;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 1) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 1) 100%);
+    .letter-col {
+      top: 50%;
+      animation: gotop 2s linear infinite;
+    }
+}
+.line-code__bott{
+    bottom: 0;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+    .letter-col {
+      top: -50%;
+      animation: gobott 2s linear infinite;
+    }
+}
+.line-code__top, .line-code__bott{
+    position: absolute;
+      left: 0;
+      height: 50%;
+      overflow: hidden;
+      white-space: nowrap;
+    .letter-col {
+      position: relative;
+      left: 0;
+      right: 0;
+      display: inline-block;
+      will-change: transform;
+    }
+    span {
+        display: block;
+        color: rgba(100, 24, 206, 1);
+        height: 25px;
+        width: 12px;
+        font-size: 12px;
+        line-height: 14px;
+    }
+}
+
+@keyframes gotop {
+    to { transform: translate3d(0, -50%, 0); }
+}
+  
+  @keyframes gobott {
+    to { transform: translate3d(0, 50%, 0); }
+}
