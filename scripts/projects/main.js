@@ -3,11 +3,15 @@ import { gsap } from 'gsap';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass }    from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+//import { importModelUrl } from '../../src/model/ModelImporter.js'
 
 const scene = new THREE.Scene();
 const canvas = document.querySelector("canvas.threejs");
 let width = canvas.clientWidth;  
 let heigth = canvas.clientHeight;
+
+/*const tubsG = await importModelUrl('../../models/tubs.gltf', 0);
+tubsG.scale.set(6, 6, 6);*/
 
 const camera = new THREE.PerspectiveCamera(
     6,
@@ -112,11 +116,15 @@ const materials = [
 for(let x = 0; x < sideLength; x++) {
     for(let y = 0; y < sideLength; y++) {
         const t = tubeGeo.clone();
+        //const t = tubsG.clone();
         const mesh = new THREE.Mesh(t, materials);
         let coord = -1;
         coord *= (sideLength / 2 * (radius + offset) * 2);
         mesh.position.set(coord + x * (radius + offset) * 2, 0, coord + y * (radius + offset) * 2 + 15);
         scene.add(mesh);
+        /*
+        t.position.set(coord + x * (radius + offset) * 2, 0, coord + y * (radius + offset) * 2 + 15);
+        scene.add(t);*/
     }
 }
 

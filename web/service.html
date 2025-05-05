@@ -6,6 +6,8 @@
     <title>Сервисы</title>
     <link rel="stylesheet" href="../styles/menu/main-menu.css">
     <link rel="stylesheet" href="../styles/service/main.css">
+    <link rel="stylesheet" href="../styles/index/order.css">
+    <link rel="stylesheet" href="../styles/index/footer.css">
 </head>
 <body>
     <nav class="menu static">
@@ -48,18 +50,78 @@
     </header>
     <main>
         <div class="text-scroll">
-            <h1>Разработка мобильных приложений</h1>
-            <h1>Визуальная идентичность</h1>
-            <h1>Графический дизайн</h1>
-            <h1>UI UX дизайн</h1>
-            <h1>Web разработка</h1>
+            <div class="list">
+                <h1 class="item">Разработка мобильных приложений</h1>
+                <h1 class="item">Визуальная идентичность</h1>
+                <h1 class="item">Графический дизайн</h1>
+                <h1 class="item">UI/UX дизайн</h1>
+                <h1 class="item">Web разработка</h1>
+            </div>
         </div>
         <div class="line-code">
             <div class="line-code__top"></div>
+            <div class="line-spliter"></div>
             <div class="line-code__bott"></div>
         </div>
     </main>
-
+    <footer>
+        <div id="order" class="order-footer">
+            <div class="order-submit flex">
+                <div class="order-title flex-column">
+                    <h1>Вас истересует разработка проекта?</h1>
+                    <p>Напишите нам</p>
+                    <a href="mailto:mail@mail.ru">mail@mail.ru</a>
+                </div>
+                <div class="order-form flex">
+                    <div class="order-person-info flex-column">
+                        <div class="person-container flex">
+                            <div class="flex-column">
+                                <label for="person-name">Ваше имя</label>
+                                <label for="person-tel">Телефон</label>
+                                <label for="person-email">Электронная почта</label>
+                            </div>
+                            <div class="flex-column inputs">
+                                <input id="person-name" type="text">
+                                <input id="person-tel" type="tel">
+                                <input id="person-email" type="email">
+                            </div>
+                        </div>
+                        <textarea id="quistion-desk" placeholder="Опишите ваше ТЗ"></textarea>                           
+                    </div>
+                    <h1>Бюджет</h1>
+                    <div class="radio-price">
+                        <label id="price">
+                            <input type="radio" name="radio-group1">
+                            <span id="price-checked"></span>
+                            1 - 3 млн.
+                        </label>
+                        <label id="price">
+                            <input type="radio" name="radio-group1">
+                            <span id="price-checked"></span>
+                            3 - 5 млн.
+                        </label>
+                        <label id="price">
+                            <input type="radio" name="radio-group1">
+                            <span id="price-checked"></span>
+                            5 - 10 млн.
+                        </label>
+                        <label id="price">
+                            <input type="radio" name="radio-group1">
+                            <span id="price-checked"></span>
+                            более 10 млн.
+                        </label>
+                    </div>
+                    <button type="button" id="send">Отправить</button>
+                </div>
+            </div>
+        </div>
+        <div class="split"></div>
+        <div class="last-content">
+            <p>©2025 НАЗВАНИЕ</p>
+            <p>Авторские права защищены</p>
+        </div>
+    </footer>
     <script src="../scripts/service/main.js"></script>
+    <script type="module" src="../scripts/service/wheel.js"></script>
 </body>
 </html>

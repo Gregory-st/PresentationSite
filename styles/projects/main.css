@@ -109,3 +109,7 @@ body{
     gap: 2vw;
     align-items: flex-end;
 }
+.icon-container *:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}

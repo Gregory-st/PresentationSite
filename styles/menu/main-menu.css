@@ -2,12 +2,12 @@
     position: fixed;
     left: 0;
     top: 0;
-    width: 98vw;
+    width: 100vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 25vw;
-    padding: 1vw;
+    gap: 1vw;
+    padding: 2vh 0;
     z-index: 1;
     mask-image: linear-gradient(to top, transparent 0, black 10%);
 }
@@ -17,6 +17,7 @@
 }
 .menu *{
     flex: 0;
+    flex-grow: 0;
     display: flex;
     margin-right: 1vw;
     justify-content: space-between;
@@ -34,7 +35,10 @@
 }
 
 .links{
-    flex: 1;
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex: 0;
+    gap: 5vw;
 }
 .links *{
     text-decoration: none;
