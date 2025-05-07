@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "frontend.urls",
+      "type": "java.lang.String",
+      "description": "Urls for configuration Cors"
+  }
+] }

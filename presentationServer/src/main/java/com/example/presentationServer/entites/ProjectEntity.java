@@ -1,22 +1,22 @@
 package com.example.presentationServer.entites;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
+import lombok.Getter;
+import lombok.Setter;
+import java.util.List;
+import java.util.Date;
+import lombok.AccessLevel;
+import jakarta.persistence.Id;
+import lombok.NoArgsConstructor;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.TemporalType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import java.util.Date;
-import java.util.List;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -42,7 +42,7 @@ public class ProjectEntity {
 
   @Column(name = "end_at")
   @Temporal(TemporalType.DATE)
-  private String endAt;
+  private Date endAt;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
   private List<ProjectImageEntity> images;
