@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import * as CART from '../src/model/Cart.js';
-import * as CARTM from '../src/model/CartMatte.js';
+import * as CART from '../../src/model/Cart.js';
+import * as CARTM from '../../src/model/CartMatte.js';
 
-import volumeShaderVert from '../src/shaders/volume/shader.vert.js';
-import volumeShaderFrag from '../src/shaders/volume/shader.frag.js';
+import volumeShaderVert from '../../src/shaders/volume/shader.vert.js';
+import volumeShaderFrag from '../../src/shaders/volume/shader.frag.js';
 
 const scene = new THREE.Scene();
 const canvas = document.querySelector("canvas.threejs");
