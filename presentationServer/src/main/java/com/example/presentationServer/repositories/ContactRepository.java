@@ -8,5 +8,5 @@ public interface ContactRepository extends JpaRepository<ContactEntity, Long> {
   Optional<ContactEntity> findByPhone(String phone);
   Optional<ContactEntity> findByEmail(String email);
 
-  Optional<ContactEntity> findFirstByOrder(Integer order);
+  Optional<ContactEntity> findByStep(Integer step);
 }

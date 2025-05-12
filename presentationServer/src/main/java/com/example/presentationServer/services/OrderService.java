@@ -21,7 +21,7 @@ public class OrderService {
         .orElse(new UserEntity());
     OrderEntity order = new OrderEntity();
 
-    if(user.getEmail().isEmpty()){
+    if(user.getEmail() == null){
       user.setName(orderDto.name());
       user.setEmail(orderDto.email());
       user.setPhone(orderDto.phone());

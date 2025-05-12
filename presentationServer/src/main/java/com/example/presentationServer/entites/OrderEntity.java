@@ -29,7 +29,7 @@ public class OrderEntity {
   @Setter(AccessLevel.PRIVATE)
   private long id;
 
-  @Column(name = "descrioption", columnDefinition = "TEXT")
+  @Column(name = "description", columnDefinition = "TEXT")
   private String description;
 
   @Column(name = "price", length = 30)

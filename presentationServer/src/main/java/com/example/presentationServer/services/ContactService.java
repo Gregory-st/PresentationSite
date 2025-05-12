@@ -16,7 +16,7 @@ public class ContactService {
   private final LinksContactRepository linksContactRepository;
 
   public ContactsModel getContact() {
-    ContactEntity contactEntity = contactRepository.findFirstByOrder(1)
+    ContactEntity contactEntity = contactRepository.findByStep(1)
         .orElseThrow();
     List<LinksContactEntity> links = linksContactRepository.findAllByContactId(contactEntity.getId());
 

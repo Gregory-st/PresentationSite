@@ -20,15 +20,15 @@ import jakarta.persistence.GenerationType;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "constacts")
+@Table(name = "contacts")
 public class ContactEntity {
   @Id
   @Setter(AccessLevel.PRIVATE)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Column(name = "order")
-  private Integer order;
+  @Column(name = "step")
+  private Integer step;
 
   @Column(name = "email")
   private String email;

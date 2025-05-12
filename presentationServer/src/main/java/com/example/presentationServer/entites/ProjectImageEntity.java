@@ -1,5 +1,6 @@
 package com.example.presentationServer.entites;
 
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AccessLevel;
@@ -24,6 +25,9 @@ public class ProjectImageEntity {
   @Setter(AccessLevel.PRIVATE)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
+
+  @Column(name = "url_image")
+  private String url;
 
   @ManyToOne
   @JoinColumn(name = "project_id")
