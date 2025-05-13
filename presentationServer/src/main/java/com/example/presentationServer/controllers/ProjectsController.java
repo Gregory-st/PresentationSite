@@ -1,6 +1,7 @@
 package com.example.presentationServer.controllers;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import com.example.presentationServer.model.ProjectModel;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.presentationServer.services.ProjectsService;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/presentation.site/projects")
@@ -24,4 +26,5 @@ public class ProjectsController {
 
     return ResponseEntity.ok(response);
   }
+
 }

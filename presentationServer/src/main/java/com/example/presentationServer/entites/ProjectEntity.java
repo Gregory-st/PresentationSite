@@ -1,5 +1,8 @@
 package com.example.presentationServer.entites;
 
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
@@ -46,4 +49,12 @@ public class ProjectEntity {
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
   private List<ProjectImageEntity> images;
+
+  @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+  @JoinTable(
+      name = "project_tags",
+      joinColumns = @JoinColumn(name = "project_id"),
+      inverseJoinColumns = @JoinColumn(name = "tag_id")
+  )
+  private List<TagEntity> tags;
 }
