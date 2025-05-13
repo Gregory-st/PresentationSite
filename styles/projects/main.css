@@ -58,15 +58,15 @@ body{
     margin-bottom: 2vh;
     font-size: clamp(15px, 1vw, 20px);
 }
-.menu-spliter div{
+.icon-container{
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    align-content: flex-start;
     justify-content: center;
+    align-content: flex-start;
     gap: 1vw;
 }
-.menu-spliter div *{
+.icon-container *{
     border: 1px solid white;
     padding: 30px;
     border-radius: 20px;
@@ -107,9 +107,19 @@ body{
     flex-grow: 1;
     display: flex;
     gap: 2vw;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 .icon-container *:hover {
     cursor: pointer;
     transform: scale(1.05);
+}
+
+.preview-card{
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 1vw;
+    grid-row-gap: 1vh;
 }

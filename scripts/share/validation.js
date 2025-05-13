@@ -33,3 +33,16 @@ export function validateDataElements(elements, minlen = 0, maxlen = 255){
     });
     return valid;
 }
+
+export function validateDataElementsOfStream(elements, predicate) {
+    let valid = true;
+    elements.forEach(element => {
+        if(valid) {
+            valid = predicate(element);
+        }
+        else {
+            predicate(element);
+        }
+    });
+    return valid;
+}

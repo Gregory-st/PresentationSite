@@ -63,7 +63,7 @@
             </div>
 
             <!-- Шаблон карточки -->
-            <template>
+            <template id="card-template">
                 <div class="card">
                     <div class="header-card">
                         <h2>Lorem.</h2>
@@ -71,13 +71,13 @@
                         <h2>Lorem.</h2>
                     </div>
                     <div class="content-card">
+                        <div class="preview-card">
+
+                        </div>
                         <div class="description-card">
                             <h3>2023-2024</h3>
                             <h1>Компания</h1>
                             <p>Создание интерфейса пользователя</p>
-                        </div>
-                        <div class="preview-card">
-                            
                         </div>
                     </div>
                 </div>
@@ -91,13 +91,13 @@
                         <h2>Lorem.</h2>
                     </div>
                     <div class="content-card">
+                        <div class="preview-card">
+                            <img src="" alt=""><img src="" alt=""><img src="" alt=""><img src="" alt=""><img src="" alt="">
+                        </div>
                         <div class="description-card">
                             <h3>2023-2024</h3>
                             <h1>Компания</h1>
                             <p>Создание интерфейса пользователя</p>
-                        </div>
-                        <div class="preview-card">
-
                         </div>
                     </div>
                 </div>
@@ -108,13 +108,13 @@
                         <h2>Lorem.</h2>
                     </div>
                     <div class="content-card">
+                        <div class="preview-card">
+                            
+                        </div>
                         <div class="description-card">
                             <h3>2023-2024</h3>
                             <h1>Компания</h1>
                             <p>Создание интерфейса пользователя</p>
-                        </div>
-                        <div class="preview-card">
-                            
                         </div>
                     </div>
                 </div>
@@ -196,6 +196,8 @@
         </div>
     </footer>
     <script src="../scripts/projects/parallaxe.js"></script>
+    <script src="../scripts/projects/getProjects.js"></script>
+    <script src="../scripts/projects/getPartners.js"></script>
     <script type="module" src="../scripts/share/order.js"></script>
     <script type="module" src="../scripts/projects/main.js"></script>
     <script type="module" src="../scripts/share/addSession.js"></script>
