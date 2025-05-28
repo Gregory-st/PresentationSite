@@ -1,0 +1,93 @@
+.title{
+    margin: 5vw 2vw 4vw 2vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 40vw;
+}
+.title h1{
+    flex: 1;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(30px, 2vw, 60px);
+}
+.description{
+    flex: 1;
+}
+.description h2{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(12px, 1vw, 24px);
+}
+#desc{
+    margin-top: 1vw;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(7px, 1vw, 14px);
+    line-height: 200%;
+}
+.content{
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    margin: 5vw 2vw 4vw 2vw;   
+    gap: 2vw;
+}
+.show{
+    padding: 1vw;
+    flex: 1;
+    border-radius: 1vw;
+    background: linear-gradient(-48.01deg, rgb(84, 64, 112) 0,rgb(14, 20, 47) 50%);
+}
+.show #title{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(30px, 3vw, 60px);
+}
+.show #content-desk {
+    margin: 2vw 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(7px, 1vw, 14px);
+}
+.show #get-start {
+    margin: 2vw 0;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(10px, 1vw, 20px);
+    color: black;
+    border: none;
+    padding: 1vw 5vw;
+    border-radius: 1vw;
+    box-shadow: inset -1px -7px 17px 0px rgb(201, 162, 255);
+    background: rgb(247, 253, 255);
+}
+.spliter{
+    flex: 2;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+}
+.info-card {
+    display: flex;
+    gap: 5vw;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4vw 3vw;
+    border-radius: 1vw;
+    background: linear-gradient(-48.01deg, rgb(6, 11, 33) 75.288%,rgb(14, 20, 47) 97.777%);
+}
+.info-card h2 {
+    flex: 1;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(20px, 2vw, 30px);
+}
+.info-card p {
+    flex: 2;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(10px, 1vw, 15px);
+}
+
+.active-card{
+    border: 1px solid rgb(225, 187, 251);
+    box-shadow: inset 0px 0px 30px 2px rgba(170, 46, 255, 0.29);
+    background: linear-gradient(-48.01deg, rgb(6, 11, 33) 75.288%,rgb(14, 20, 47) 97.777%);
+}
