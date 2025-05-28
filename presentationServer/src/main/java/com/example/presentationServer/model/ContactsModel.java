@@ -11,7 +11,7 @@ import com.example.presentationServer.entites.LinksContactEntity;
 @Setter
 public class ContactsModel {
   @Setter(AccessLevel.PRIVATE)
-  private String[] urls;
+  private String[][] urls;
   private String name;
   private String firstname;
   private String email;
@@ -23,9 +23,10 @@ public class ContactsModel {
     setPhone(contactEntity.getPhone());
     setFirstname(contactEntity.getFirstname());
 
-    String[] links = (String[]) linksContactEntity.stream()
-        .map(LinksContactEntity::getUrl)
-        .toArray();
-    setUrls(links);
+    urls = new String[2][linksContactEntity.size()];
+    for (int i = 0; i < linksContactEntity.size(); i++) {
+      urls[0][i] = linksContactEntity.get(i).getName();
+      urls[1][i] = linksContactEntity.get(i).getUrl();
+    }
   }
 }

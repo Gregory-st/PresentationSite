@@ -29,6 +29,9 @@ public class LinksContactEntity {
   @Column(name = "url")
   private String url;
 
+  @Column(name = "name")
+  private String name;
+
   @ManyToOne
   @JoinColumn(name = "contact_id")
   private ContactEntity contact;
