@@ -3,7 +3,6 @@ export async function loaded() {
     url += '/services';
     
     const list = document.querySelector('.list');
-    list.innerHTML = '';
     function renderElement(elements) {
         elements.forEach(element => {
             const h1 = document.createElement('h1');

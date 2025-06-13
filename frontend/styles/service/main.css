@@ -46,15 +46,17 @@ header div{
     gap: 2vh;
 }
 
-.list {
+.text-scroll {
+    border: solid 1px white;
+    border-radius: 10px;
+    mask-image: linear-gradient(to top, transparent 5%, black 48%, black 52%, transparent 95%);
+}
+.list{
+    padding: 20px;
     display: flex;
     align-items: center;
     flex-direction: column;
     gap: 5vh;
-    padding: 20px;
-    border: solid 1px white;
-    border-radius: 10px;
-    mask-image: linear-gradient(to top, transparent 5%, black 48%, black 52%, transparent 95%);
 }
 .item {
     font-size: 3rem;

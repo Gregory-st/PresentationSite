@@ -3,11 +3,11 @@ import { loaded } from "./service-get";
 
 const wheel = document.querySelector('.text-scroll');
 let list = null;
-let itemHeight = wheel.querySelector('.item').offsetHeight;
-let items = gsap.utils.toArray('.item');
+let itemHeight = null;
+let items = null;
 let position = 0;
-let centerOffset = (wheel.clientHeight - itemHeight) / 2;
-let lenItems = items.length;
+let centerOffset = null;
+let lenItems = 0;
 
 loaded()
 .then(() => {
@@ -21,7 +21,7 @@ loaded()
     const id = Math.round(items.length / 2);
     document.querySelector('#desc-service').textContent = items[id].dataset.desc;
     
-    position = gsap.getProperty(list, 'y');
+    position = gsap.getProperty(items[id], 'y');
     gsap.set(list, { y:position });
 });
 
